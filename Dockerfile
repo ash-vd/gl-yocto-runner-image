@@ -46,8 +46,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
     gnupg2 \
-    software-properties-common \
-    docker-ce="${DOCKER_VERSION}"
+    software-properties-common
 
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 ENV NVM_DIR=/root/.nvm
@@ -58,7 +57,7 @@ ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
-RUN apt-get -y install docker-ce="${DOCKER_VERSION}" docker-ce-cli="${DOCKER_VERSION}"
+RUN apt-get -y install docker-ce=${DOCKER_VERSION} docker-ce-cli=${DOCKER_VERSION}
 
 # Update the locales to UTF-8
 RUN locale-gen en_US.UTF-8 && update-locale LC_ALL=en_US.UTF-8 \
