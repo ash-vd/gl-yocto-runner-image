@@ -6,12 +6,14 @@ LABEL org.opencontainers.image.source="https://github.com/glassboard-dev/gl-yoct
 
 # set the github runner version
 ARG RUNNER_VERSION="2.304.0"
+ARG NODE_VERSION="18.16.0"
+ARG DOCKER_VERSION="5:20.10.24~3-0~ubuntu-focal"
 
 # do a non interactive build
 ARG DEBIAN_FRONTEND=noninteractive
 
 # update the base packages and add a non-sudo user
-RUN apt-get update -y && apt-get upgrade -y && useradd -m docker
+RUN apt-get update -y && apt-get upgrade -y && useradd -m runner
 
 # install python and the packages the your code depends on along with jq so we can parse JSON
 # add additional packages as necessary
@@ -39,7 +41,24 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     cpio \
     file \
     xxd \
-    locales
+    locales \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg2 \
+    software-properties-common \
+    docker-ce="${DOCKER_VERSION}"
+
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+ENV NVM_DIR=/root/.nvm
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+RUN apt-get -y install docker-ce="${DOCKER_VERSION}" docker-ce-cli="${DOCKER_VERSION}"
 
 # Update the locales to UTF-8
 RUN locale-gen en_US.UTF-8 && update-locale LC_ALL=en_US.UTF-8 \
@@ -48,12 +67,12 @@ ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 
 # cd into the user directory, download and unzip the github actions runner
-RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
+RUN cd /home/runner && mkdir actions-runner && cd actions-runner \
     && curl -O -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
     && tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
 
 # install some additional dependencies
-RUN chown -R docker ~docker && /home/docker/actions-runner/bin/installdependencies.sh
+RUN chown -R runner ~runner && /home/runner/actions-runner/bin/installdependencies.sh
 
 # copy over the start.sh script
 COPY start.sh start.sh
@@ -62,8 +81,8 @@ COPY start.sh start.sh
 RUN chmod +x start.sh
 
 # since the config and run script for actions are not allowed to be run by root,
-# set the user to "docker" so all subsequent commands are run as the docker user
-USER docker
+# set the user to "runner" so all subsequent commands are run as the runner user
+USER runner
 
 # set the entrypoint to the start.sh script
 ENTRYPOINT ["./start.sh"]
