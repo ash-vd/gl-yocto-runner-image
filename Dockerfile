@@ -91,11 +91,14 @@ RUN chown -R runner ~runner && /home/runner/actions-runner/bin/installdependenci
 
 # copy over the start.sh script
 COPY start.sh start.sh
+COPY modprobe /usr/local/bin/
 
 COPY supervisor/ /etc/supervisor/conf.d/
 
 # make the script executable
-RUN chmod +x start.sh
+RUN chmod +x start.sh /usr/local/bin/modprobe
+
+# ENTRYPOINT ["start.sh"]
 
 CMD ["/usr/bin/supervisord", "-n"]
 
