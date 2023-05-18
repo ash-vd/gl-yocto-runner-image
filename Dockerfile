@@ -67,6 +67,8 @@ RUN echo \
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install docker-ce=${DOCKER_VERSION} docker-ce-cli=${DOCKER_VERSION}
 
+RUN usermod -aG docker runner
+
 # Update the locales to UTF-8
 RUN locale-gen en_US.UTF-8 && update-locale LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8
