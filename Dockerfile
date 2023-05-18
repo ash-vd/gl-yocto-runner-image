@@ -104,7 +104,7 @@ CMD ["/usr/bin/supervisord", "-n"]
 
 # since the config and run script for actions are not allowed to be run by root,
 # set the user to "runner" so all subsequent commands are run as the runner user
-# USER runner
+USER runner
 
 # set the entrypoint to the start.sh script
-# ENTRYPOINT ["./start.sh"]
+ENTRYPOINT ["./start.sh"]
