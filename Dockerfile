@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.source="https://github.com/glassboard-dev/gl-yoct
 
 # set the github runner version
 ARG RUNNER_VERSION="2.304.0"
-ARG NODE_VERSION="18.16.0"
+ARG NODE_VERSION="v18.16.0"
 ARG DOCKER_VERSION="5:20.10.24~3-0~ubuntu-focal"
 
 # do a non interactive build
@@ -49,21 +49,20 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     software-properties-common
 
 
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-ENV NVM_DIR=/home/runner/.nvm
-RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
-ENV PATH="/home/runner/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+RUN cd /opt \
+    && curl -LO https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-linux-x64.tar.xz \
+    && tar xJf node-${NODE_VERSION}-linux-x64.tar.xz \
+    && rm node-${NODE_VERSION}-linux-x64.tar.xz
+ENV PATH=/opt/node-${NODE_VERSION}-linux-x64/bin:${PATH}
 
 RUN install -m 0755 -d /etc/apt/keyrings
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 RUN chmod a+r /etc/apt/keyrings/docker.gpg
 
 RUN echo \
-  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-  tee /etc/apt/sources.list.d/docker.list > /dev/null
+    "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+    "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+    tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install docker-ce=${DOCKER_VERSION} docker-ce-cli=${DOCKER_VERSION}
