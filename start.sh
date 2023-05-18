@@ -34,7 +34,7 @@ done
 
 cd /home/runner/actions-runner
 
-./config.sh --url "https://github.com/${ORGANIZATION}" --token ${REG_TOKEN} --labels yocto,x64,linux
+./config.sh --url "https://github.com/${ORGANIZATION}" --token ${REG_TOKEN} --labels yocto,x64,linux --name runner1 --unattended
 
 cleanup() {
     echo "Removing runner..."

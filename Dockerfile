@@ -107,4 +107,4 @@ CMD ["/usr/bin/supervisord", "-n"]
 USER runner
 
 # set the entrypoint to the start.sh script
-ENTRYPOINT ["./start.sh"]
+# ENTRYPOINT ["./start.sh"]
