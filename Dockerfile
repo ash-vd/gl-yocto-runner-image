@@ -46,7 +46,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
     gnupg2 \
-    software-properties-common
+    software-properties-common \
+    supervisor
 
 
 RUN cd /opt \
@@ -90,6 +91,8 @@ RUN chown -R runner ~runner && /home/runner/actions-runner/bin/installdependenci
 
 # copy over the start.sh script
 COPY start.sh start.sh
+
+COPY supervisor/ /etc/supervisor/conf.d/
 
 # make the script executable
 RUN chmod +x start.sh
