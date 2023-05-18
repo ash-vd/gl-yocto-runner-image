@@ -67,10 +67,12 @@ ENV PATH=/opt/node-${NODE_VERSION}-linux-x64/bin:${PATH}
 # RUN apt-get update
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -y install docker-ce=${DOCKER_VERSION} docker-ce-cli=${DOCKER_VERSION}
 
-# RUN usermod -aG docker runner
 
 
 RUN curl -sSL https://get.docker.com/ | VERSION=20.10.24~3 sh
+
+RUN usermod -aG docker runner
+RUN newgrp docker
 
 # Update the locales to UTF-8
 RUN locale-gen en_US.UTF-8 && update-locale LC_ALL=en_US.UTF-8 \
