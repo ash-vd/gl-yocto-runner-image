@@ -97,7 +97,7 @@ COPY supervisor/ /etc/supervisor/conf.d/
 # make the script executable
 RUN chmod +x start.sh
 
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord", "-n"]
 
 # since the config and run script for actions are not allowed to be run by root,
 # set the user to "runner" so all subsequent commands are run as the runner user
