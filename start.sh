@@ -4,7 +4,7 @@ ACCESS_TOKEN=$ACCESS_TOKEN
 
 REG_TOKEN=$(curl -sX POST -H "Authorization: token ${ACCESS_TOKEN}" "https://api.github.com/repos/${ORGANIZATION}/actions/runners/registration-token" | jq .token --raw-output)
 
-/usr/bin/supervisord -n >> /dev/null 2>&1 &
+/usr/bin/supervisord -n >> /var/log/supervisor/supervisord.log &
 
 function wait_for_process () {
     local max_time_wait=30
@@ -22,17 +22,17 @@ function wait_for_process () {
     return 0
 }
 
-processes=(dockerd)
+# processes=(dockerd)
 
-for process in "${processes[@]}"; do
-    wait_for_process "$process"
-    if [ $? -ne 0 ]; then
-        echo "$process is not running after max time"
-        exit 1
-    else 
-        echo "$process is running"
-    fi
-done
+# for process in "${processes[@]}"; do
+#     wait_for_process "$process"
+#     if [ $? -ne 0 ]; then
+#         echo "$process is not running after max time"
+#         exit 1
+#     else 
+#         echo "$process is running"
+#     fi
+# done
 
 cd /home/runner/actions-runner
 
