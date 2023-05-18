@@ -8,7 +8,7 @@ echo "ORGANIZATION"
 echo ACCESS_TOKEN
 echo "${REG_TOKEN}"
 
-cd /home/docker/actions-runner
+cd /home/runner/actions-runner
 
 ./config.sh --url "https://github.com/${ORGANIZATION}" --token ${REG_TOKEN} --labels yocto,x64,linux
 
