@@ -55,19 +55,22 @@ RUN cd /opt \
     && rm node-${NODE_VERSION}-linux-x64.tar.xz
 ENV PATH=/opt/node-${NODE_VERSION}-linux-x64/bin:${PATH}
 
-RUN install -m 0755 -d /etc/apt/keyrings
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-RUN chmod a+r /etc/apt/keyrings/docker.gpg
+# RUN install -m 0755 -d /etc/apt/keyrings
+# RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+# RUN chmod a+r /etc/apt/keyrings/docker.gpg
 
-RUN echo \
-    "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-    "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-    tee /etc/apt/sources.list.d/docker.list > /dev/null
+# RUN echo \
+#     "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+#     "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+#     tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install docker-ce=${DOCKER_VERSION} docker-ce-cli=${DOCKER_VERSION}
+# RUN apt-get update
+# RUN DEBIAN_FRONTEND=noninteractive apt-get -y install docker-ce=${DOCKER_VERSION} docker-ce-cli=${DOCKER_VERSION}
 
-RUN usermod -aG docker runner
+# RUN usermod -aG docker runner
+
+
+RUN curl -sSL https://get.docker.com/ | VERSION=20.10.24~3 sh
 
 # Update the locales to UTF-8
 RUN locale-gen en_US.UTF-8 && update-locale LC_ALL=en_US.UTF-8 \
