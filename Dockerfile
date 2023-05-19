@@ -68,8 +68,6 @@ ENV PATH=/opt/node-${NODE_VERSION}-linux-x64/bin:${PATH}
 # RUN apt-get update
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -y install docker-ce=${DOCKER_VERSION} docker-ce-cli=${DOCKER_VERSION}
 
-
-
 RUN curl -sSL https://get.docker.com/ | VERSION=20.10.24~3 sh
 
 RUN usermod -aG docker runner
@@ -97,6 +95,8 @@ COPY supervisor/ /etc/supervisor/conf.d/
 
 # make the script executable
 RUN chmod +x start.sh /usr/local/bin/modprobe
+
+VOLUME /var/lib/docker
 
 # ENTRYPOINT ["start.sh"]
 
