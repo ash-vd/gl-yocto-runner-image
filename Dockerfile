@@ -47,8 +47,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     curl \
     gnupg2 \
     software-properties-common \
-    supervisor
-
+    supervisor \
+    zstd \
+    lz4
 
 RUN cd /opt \
     && curl -LO https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-linux-x64.tar.xz \
