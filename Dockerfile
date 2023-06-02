@@ -1,5 +1,5 @@
 # base
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # Add a label pointing to our repository
 LABEL org.opencontainers.image.source="https://github.com/glassboard-dev/gl-yocto-runner-image"
@@ -27,7 +27,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     python3-venv \
     python3-dev \
     python3-pip \
-    # python \
+    python2 \
     python2.7 \
     gawk \
     wget \
@@ -35,7 +35,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     diffstat \
     unzip \
     texinfo \
-    # gcc-multilib \
+    gcc-multilib \
     chrpath \
     socat \
     libsdl1.2-dev \
@@ -50,8 +50,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     gnupg2 \
     software-properties-common \
     supervisor \
-    zstd
-# lz4
+    zstd \
+    lz4
 
 RUN cd /opt \
     && curl -LO https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-linux-x64.tar.xz \
